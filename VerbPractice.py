@@ -15,6 +15,22 @@ NORI = (('NERI','T/DA'),
 		('ZURI','ZU'),
 		('ZUEI','ZUE'),
 		('HAIEI','E'))
+
+NORPAST = (('NI','NINTZAI+N'),
+		('HI','HINTZAI+N'),
+		('HURA','ZITZAI+N'),
+		('GU','GINTZAIZKI+N'),
+		('ZU','ZINTZAIZKI+N'),
+		('ZUEK','ZINTZAIZKI+TEN'),
+		('HAIEK','ZITZAIZKI+N'))
+NORIPAST = (('NERI','DA'),
+		('HIRI','A'),
+		('HARI','O'),
+		('GURI','GU'),
+		('ZURI','ZU'),
+		('ZUEI','ZUE'),
+		('HAIEI','E'))
+
 IMPOSSIBLE = ( ('NI',('NERI','GURI')),
 		('HI',('HIRI','ZURI','ZUEI')),
 		('HURA',()),
@@ -22,6 +38,24 @@ IMPOSSIBLE = ( ('NI',('NERI','GURI')),
 		('ZU',('HIRI','ZURI','ZUEI')),
 		('ZUEK',('HIRI','ZURI','ZUEI')),
 		('HAIEK',()) )
+
+def buildVerbPast(nor,nori):
+	''' Takes two inputs, the NOR and NORI
+		and returns the conjugated form in past tense
+	'''
+	# Pull out the correct stem and suffix based on the pronouns
+	for pron,verb in NORPAST:
+		if nor == pron:
+			stem = verb
+	for pron,verb in NORIPAST:
+		if nori == pron:
+			suffix = verb
+	# stem2 gets added to the end of the verb (for ZUEK)
+	stem2 = ''
+	if '+' in stem:
+		stem,stem2 = stem.split('+')
+	string = stem + suffix + stem2
+	return string.lower()
 
 def buildVerb(nor,nori):
 	''' Takes two inputs, the NOR and NORI
@@ -71,22 +105,41 @@ def numMenu(prompt,num):
 				print("Please enter a valid selection")
 
 if __name__ == '__main__':
-	selection = numMenu("What would you like to work on? (enter 0 at any time to quit)\n1. NOR-NORI present tense",1)
+	selection = numMenu("""What would you like to work on? (enter 0 at any time to quit)
+1. NOR-NORI present tense
+2. NOR-NORI past tense""",2)
 	if selection == 0:
 		quit()
 	score = 0
-	# Keep asking for more 
-	while True:
-		nor = randrange(0,len(NOR)-1)
-		nori = randrange(0,len(NORI)-1)
-		while NORI[nori][0] in IMPOSSIBLE[nor][1]:
+	if selection == 1:
+		# Keep asking for more 
+		while True:
+			nor = randrange(0,len(NOR)-1)
 			nori = randrange(0,len(NORI)-1)
-		selection = input("{} + {}\n".format(NOR[nor][0],NORI[nori][0]))
-		if selection == '0':
-			quit()
-		answer = buildVerb(NOR[nor][0],NORI[nori][0])
-		if selection.lower() == answer:
-			score += 1
-			print("   {} correct!".format(score))
-		else:
-			print("   Incorrect: " + answer)
+			while NORI[nori][0] in IMPOSSIBLE[nor][1]:
+				nori = randrange(0,len(NORI)-1)
+			selection = input("{} + {}\n".format(NOR[nor][0],NORI[nori][0]))
+			if selection == '0':
+				quit()
+			answer = buildVerb(NOR[nor][0],NORI[nori][0])
+			if selection.lower() == answer:
+				score += 1
+				print("   {} correct!".format(score))
+			else:
+				print("   Incorrect: " + answer)
+	if selection == 2:
+		# Keep asking for more 
+		while True:
+			nor = randrange(0,len(NORPAST)-1)
+			nori = randrange(0,len(NORIPAST)-1)
+			while NORIPAST[nori][0] in IMPOSSIBLE[nor][1]:
+				nori = randrange(0,len(NORIPAST)-1)
+			selection = input("{} + {}\n".format(NORPAST[nor][0],NORIPAST[nori][0]))
+			if selection == '0':
+				quit()
+			answer = buildVerbPast(NORPAST[nor][0],NORIPAST[nori][0])
+			if selection.lower() == answer:
+				score += 1
+				print("   {} correct!".format(score))
+			else:
+				print("   Incorrect: " + answer)
