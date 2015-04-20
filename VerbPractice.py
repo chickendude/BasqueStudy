@@ -34,6 +34,7 @@ def buildVerb(nor,nori):
 	for pron,verb in NORI:
 		if nori == pron:
 			suffix = verb
+	# stem2 gets added to the end of the verb (for ZUEK)
 	stem2 = ''
 	if '+' in stem:
 		stem,stem2 = stem.split('+')
@@ -73,6 +74,7 @@ if __name__ == '__main__':
 	selection = numMenu("What would you like to work on? (enter 0 at any time to quit)\n1. NOR-NORI present tense",1)
 	if selection == 0:
 		quit()
+	score = 0
 	# Keep asking for more 
 	while True:
 		nor = randrange(0,len(NOR)-1)
@@ -82,4 +84,9 @@ if __name__ == '__main__':
 		selection = input("{} + {}\n".format(NOR[nor][0],NORI[nori][0]))
 		if selection == '0':
 			quit()
-		print(buildVerb(NOR[nor][0],NORI[nori][0]))
+		answer = buildVerb(NOR[nor][0],NORI[nori][0])
+		if selection.lower() == answer:
+			score += 1
+			print("   {} correct!".format(score))
+		else:
+			print("   Incorrect: " + answer)
