@@ -1,0 +1,27 @@
+nor-nori: nor-nori
+	present
+		nor: natzai, hatzai, zai, gatzaizki, zatzaizki, zatzaizki+te, zaizki
+		nori: t/da, k, o, gu, zu, zue, e
+	past
+		nor: nintzai+n, hintzai+n, zitzai+n, gintzaizki+n, zintzaizki+n, zintzaizki+ten, zitzaizki+n
+		nori: da, a, o, gu, zu, zue, e
+joan: nor
+	present
+		nor: noa, hoa, doa, goaz, zoaz, zoazte, doaz
+	past
+		nor: nindoan, hindoan, zihoan, gindoazen, zindoazen, zindoazten, zihoazen
+etorri: nor
+	present
+		nor: nator, hator, dator, gatoz, zatoz, zatozte, datoz
+	past
+		nor: nentorren, hentorren, zetorren, gentozen, zentozen, zentozten, zetozten
+ibili: nor
+	present
+		nor: nabil, habil, dabil, gabiltza, zabiltza, zabiltzate, dabiltza
+	past
+		nor: nenbilen, henbilen, zebilen, genbiltzan, zenbiltzan, zenbiltzaten, zebiltzan
+egon: nor
+	present
+		nor: nago, hago, dago, gaude, zaude, zaudete, daude
+	past
+		nor: nengoen, hengoen, zegoen, geunden, zeunden, zeundeten, zeuden

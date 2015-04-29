@@ -1,35 +1,10 @@
 import re
+from collections import OrderedDict
 from random import randrange
 
-NOR = (('NI','NATZAI'),
-		('HI','HATZAI'),
-		('HURA','ZAI'),
-		('GU','GATZAIZKI'),
-		('ZU','ZATZAIZKI'),
-		('ZUEK','ZATZAIZKI+TE'),
-		('HAIEK','ZAIZKI'))
-NORI = (('NERI','T/DA'),
-		('HIRI','K'),
-		('HARI','O'),
-		('GURI','GU'),
-		('ZURI','ZU'),
-		('ZUEI','ZUE'),
-		('HAIEI','E'))
-
-NORPAST = (('NI','NINTZAI+N'),
-		('HI','HINTZAI+N'),
-		('HURA','ZITZAI+N'),
-		('GU','GINTZAIZKI+N'),
-		('ZU','ZINTZAIZKI+N'),
-		('ZUEK','ZINTZAIZKI+TEN'),
-		('HAIEK','ZITZAIZKI+N'))
-NORIPAST = (('NERI','DA'),
-		('HIRI','A'),
-		('HARI','O'),
-		('GURI','GU'),
-		('ZURI','ZU'),
-		('ZUEI','ZUE'),
-		('HAIEI','E'))
+NOR = ('NI','HI','HURA','GU','ZU','ZUEK','HAIEK')
+NORI = ('NERI','HIRI','HARI','GURI','ZURI','ZUEI','HAIEI')
+NORK = ('NIK','HIK','HARK','GUK','ZUK','ZUEK','HAIEK')
 
 IMPOSSIBLE = ( ('NI',('NERI','GURI')),
 		('HI',('HIRI','ZURI','ZUEI')),
@@ -39,36 +14,11 @@ IMPOSSIBLE = ( ('NI',('NERI','GURI')),
 		('ZUEK',('HIRI','ZURI','ZUEI')),
 		('HAIEK',()) )
 
-def buildVerbPast(nor,nori):
-	''' Takes two inputs, the NOR and NORI
-		and returns the conjugated form in past tense
+def buildVerb(nor,nori=''):
+	''' Returns the conjugated form of a verb based on it's inputs
 	'''
-	# Pull out the correct stem and suffix based on the pronouns
-	for pron,verb in NORPAST:
-		if nor == pron:
-			stem = verb
-	for pron,verb in NORIPAST:
-		if nori == pron:
-			suffix = verb
-	# stem2 gets added to the end of the verb (for ZUEK)
-	stem2 = ''
-	if '+' in stem:
-		stem,stem2 = stem.split('+')
-	string = stem + suffix + stem2
-	return string.lower()
-
-def buildVerb(nor,nori):
-	''' Takes two inputs, the NOR and NORI
-		and returns the conjugated form
-	'''
-	# Pull out the correct stem and suffix based on the pronouns
-	for pron,verb in NOR:
-		if nor == pron:
-			stem = verb
-	for pron,verb in NORI:
-		if nori == pron:
-			suffix = verb
-	# stem2 gets added to the end of the verb (for ZUEK)
+	stem = nor
+	suffix = nori
 	stem2 = ''
 	if '+' in stem:
 		stem,stem2 = stem.split('+')
@@ -81,6 +31,11 @@ def buildVerb(nor,nori):
 	string = stem + suffix + stem2
 	return string.lower()
 
+def clrScr(prompt=''):
+	# Clear the screen
+	print("\033c", end="")
+
+
 def numMenu(prompt,num):
 	''' Displays a menu, waits for a prompt, and returns the selected
 		value. Repeats until a valid number is input.
@@ -89,9 +44,10 @@ def numMenu(prompt,num):
 				num = the number of menu items (ie max legitimate number)
 	'''
 	# Repeat until a valid selection has been made (0 - max)
+	prompt += "\n{}. Exit".format(num+1)
 	while True:
-		# Clear the screen
-		print("\033c" + prompt)
+		clrScr()
+		print(prompt)
 		selection = input()
 		if selection:
 			try:
@@ -99,47 +55,116 @@ def numMenu(prompt,num):
 			except:
 				# On exception, set value to an invalid number
 				value = num+1
-			if value <= num:
+			if value <= num and value > 0:
 				return value
-			else:
-				print("Please enter a valid selection")
+			if value == num+1:
+				return False
 
-if __name__ == '__main__':
-	selection = numMenu("""What would you like to work on? (enter 0 at any time to quit)
-1. NOR-NORI present tense
-2. NOR-NORI past tense""",2)
-	if selection == 0:
-		quit()
+def buildNorNori(nor,nori,tense):
+	''' Returns the conjugated form of a verb based on it's inputs
+	'''
+	stem = nor
+	suffix = nori
+	stem2 = ''
+	if '+' in stem:
+		stem,stem2 = stem.split('+')
+	if '/' in suffix:
+		suffix = suffix.split('/')
+		if stem2:
+			suffix = suffix[1]
+		else:
+			suffix = suffix[0]
+	string = stem + suffix + stem2
+	return string.lower()
+
+
+def runTest(verb,tense):
+	''' verb is the verb's dictionary entry
+		tense is the tense id
+	'''
 	score = 0
-	if selection == 1:
-		# Keep asking for more 
-		while True:
+	grade = ""
+	while True:
+		clrScr()
+		print("Testing the {} tense of {}:\n{}".format(tense,verb['name'],grade))
+		# Handle verbs of type NOR
+		if verb['type'] == 'nor':
+			# Randomly select the galdegaia
+			nor = randrange(0,len(NOR)-1)
+			selection = input("{}\n".format(NOR[nor]))
+			# If user types 'exit', go back
+			if selection.lower() == 'exit':
+				return
+			answer = verb['tenses'][tense]['nor'][nor]
+	
+		# Handle verbs of type NOR-NORI
+		if verb['type'] == 'nor-nori':
+			# Randomly select the galdegaiak
 			nor = randrange(0,len(NOR)-1)
 			nori = randrange(0,len(NORI)-1)
-			while NORI[nori][0] in IMPOSSIBLE[nor][1]:
+			while NORI[nori] in IMPOSSIBLE[nor][1]:
 				nori = randrange(0,len(NORI)-1)
-			selection = input("{} + {}\n".format(NOR[nor][0],NORI[nori][0]))
-			if selection == '0':
-				quit()
-			answer = buildVerb(NOR[nor][0],NORI[nori][0])
-			if selection.lower() == answer:
-				score += 1
-				print("   {} correct!".format(score))
-			else:
-				print("   Incorrect: " + answer)
-	if selection == 2:
-		# Keep asking for more 
-		while True:
-			nor = randrange(0,len(NORPAST)-1)
-			nori = randrange(0,len(NORIPAST)-1)
-			while NORIPAST[nori][0] in IMPOSSIBLE[nor][1]:
-				nori = randrange(0,len(NORIPAST)-1)
-			selection = input("{} + {}\n".format(NORPAST[nor][0],NORIPAST[nori][0]))
-			if selection == '0':
-				quit()
-			answer = buildVerbPast(NORPAST[nor][0],NORIPAST[nori][0])
-			if selection.lower() == answer:
-				score += 1
-				print("   {} correct!".format(score))
-			else:
-				print("   Incorrect: " + answer)
+			selection = input("{} + {}\n".format(NOR[nor],NORI[nori]))
+			# If user types 'exit', go back
+			if selection.lower() == 'exit':
+				return
+			nor = verb['tenses'][tense]['nor'][nor]
+			nori = verb['tenses'][tense]['nori'][nori]
+			answer = buildNorNori(nor,nori,tense)
+
+		if selection.lower() == answer:
+			score += 1
+			grade = "{} correct!".format(score)
+		else:
+			grade = "*Incorrect: " + answer
+
+def pickTense(verb):
+	# Now we select the verb tense we want to study
+	counter = 0
+	string = "{}:\nWhat tense would you like to work on?".format(verb['name'])
+	tenseList = []
+	for tense in sorted(verb['tenses'].keys(),reverse = True):
+		counter += 1
+		string += "\n"+str(counter)+". "+str(tense.capitalize())
+		tenseList.append(tense)
+	selection = numMenu(string,len(verb['tenses']))
+	if selection:
+		runTest(verb,tenseList[selection-1])
+	else:
+		return
+
+def pickVerb(verbList):
+	while True:
+		counter = 0
+		string = "Please pick a verb:"
+		for verb in verbList:
+			counter += 1
+			string += "\n"+str(counter)+". "+verb['name'].capitalize()
+		selection = numMenu(string,len(verbs))
+		if selection:
+			pickTense(verbList[selection-1])
+		else:
+			return
+
+
+if __name__ == '__main__':
+	# Make a list of dictionary values, each entry is a separate verb read from verbs.lst
+	verbs = []
+
+	with open('verbs.lst', encoding='utf-8') as file:
+		for line in file:
+			tabs = line.count("\t")
+			if tabs == 0:
+				verbname,verbtype = line.strip().split(': ')
+				verbs.append({})
+				# Set verb name and verb type
+				verbs[-1]['name'] = verbname
+				verbs[-1]['type'] = verbtype
+				verbs[-1]['tenses'] = {}
+			if tabs == 1:
+				verbtense = line.strip()
+				verbs[-1]['tenses'][verbtense] = {}
+			if tabs == 2:
+				galdegaia, verbforms = line.strip().split(': ')
+				verbs[-1]['tenses'][verbtense][galdegaia] = verbforms.strip().split(', ')
+	pickVerb(verbs)
