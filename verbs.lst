@@ -1,27 +1,67 @@
-nor-nori: nor-nori
+nor-nori:
+nor-nori auxiliary
 	present
 		nor: natzai, hatzai, zai, gatzaizki, zatzaizki, zatzaizki+te, zaizki
 		nori: t/da, k, o, gu, zu, zue, e
 	past
 		nor: nintzai+n, hintzai+n, zitzai+n, gintzaizki+n, zintzaizki+n, zintzaizki+ten, zitzaizki+n
 		nori: da, a, o, gu, zu, zue, e
-joan: nor
+
+nor:
+joan
 	present
 		nor: noa, hoa, doa, goaz, zoaz, zoazte, doaz
 	past
 		nor: nindoan, hindoan, zihoan, gindoazen, zindoazen, zindoazten, zihoazen
-etorri: nor
+etorri
 	present
 		nor: nator, hator, dator, gatoz, zatoz, zatozte, datoz
 	past
 		nor: nentorren, hentorren, zetorren, gentozen, zentozen, zentozten, zetozten
-ibili: nor
+ibili
 	present
 		nor: nabil, habil, dabil, gabiltza, zabiltza, zabiltzate, dabiltza
 	past
 		nor: nenbilen, henbilen, zebilen, genbiltzan, zenbiltzan, zenbiltzaten, zebiltzan
-egon: nor
+egon
 	present
 		nor: nago, hago, dago, gaude, zaude, zaudete, daude
 	past
 		nor: nengoen, hengoen, zegoen, geunden, zeunden, zeundeten, zeuden
+
+zer-nork:
+eraman
+	present
+		singular: daramat, daramak, darama, daramagu, daramazu, daramazue, daramate
+		plural: daramatzat, daramatzak, daramatza, daramatzagu, daramatzazu, daramatzazue, daramatzate
+	past
+		singular: neraman, heraman, zeraman, generaman, zeneraman, zeneramaten, zeramaten
+		plural: neramatzan, heramatzan, zeramatzan, generamatzan, zeneramatzan, zeneramatzaten, zeramatzaten
+ekarri
+	present
+		singular: dakart, dakark, dakar, dakargu, dakarzu, dakarzue, dakarte
+		plural: dakartzat, dakartzak, dakartza, dakartzagu, dakartzazu, dakartzazue, dakartzate
+	past
+		singular: nekarren, hekarren, zekarren, genekarren, zenekarren, zenekarten, zekarten
+		plural: nekartzan, hekartzan, zekartzan, genekartzan, zenekartzan, zenekartzaten, zekartzaten
+eduki
+	present
+		singular: daukat, daukak, dauka, daukagu, daukazu, daukazue, daukate
+		plural: dauzkat, dauzkak, dauzka, dauzkagu, dauzkazu, dauzkazue, dauzkate
+	past
+		singular: neukan, heukan, zeukan, geneukan, zeneukan, zeneukaten, zeukaten
+		plural: neuzkan, heuzkan, zeuzkan, geneuzkan, zeneuzkan, zeneuzkaten, zeuzkaten
+jakin
+	present
+		singular: dakit, dakik, daki, dakigu, dakizu, dakizue, dakite
+		plural: dakizkit, dakizkik, dakizki, dakizkigu, dakizkizu, dakizkizue, dakizkite
+	past
+		singular: nekien, hekien, zekien, genekien, zenekien, zenekiten, zekiten
+		plural: nekizkien, hekizkien, zekizkien, genekizkien, zenekizkien, zenekizkiten, zekizkiten
+
+nork:
+esan
+	present
+		nork: diot, diok, dio, diogu, diozu, diozue, diote
+	past
+		nork: nioen, hioen, zioen, genioen, zenioen, zenioten, zioten

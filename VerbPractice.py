@@ -14,23 +14,6 @@ IMPOSSIBLE = ( ('NI',('NERI','GURI')),
 		('ZUEK',('HIRI','ZURI','ZUEI')),
 		('HAIEK',()) )
 
-def buildVerb(nor,nori=''):
-	''' Returns the conjugated form of a verb based on it's inputs
-	'''
-	stem = nor
-	suffix = nori
-	stem2 = ''
-	if '+' in stem:
-		stem,stem2 = stem.split('+')
-	if '/' in suffix:
-		suffix = suffix.split('/')
-		if stem2:
-			suffix = suffix[1]
-		else:
-			suffix = suffix[0]
-	string = stem + suffix + stem2
-	return string.lower()
-
 def clrScr(prompt=''):
 	# Clear the screen
 	print("\033c", end="")
@@ -44,7 +27,7 @@ def numMenu(prompt,num):
 				num = the number of menu items (ie max legitimate number)
 	'''
 	# Repeat until a valid selection has been made (0 - max)
-	prompt += "\n{}. Exit".format(num+1)
+	prompt += "\n  {}. Exit".format(num+1)
 	while True:
 		clrScr()
 		print(prompt)
@@ -92,7 +75,6 @@ def runTest(verb,tense):
 			# Randomly select the galdegaia
 			nor = randrange(0,len(NOR))
 			selection = input("{}\n".format(NOR[nor]))
-			# If user types 'exit', go back
 			answer = verb['tenses'][tense]['nor'][nor]
 	
 		# Handle verbs of type NOR-NORI
@@ -103,27 +85,46 @@ def runTest(verb,tense):
 			while NORI[nori] in IMPOSSIBLE[nor][1]:
 				nori = randrange(0,len(NORI))
 			selection = input("{} + {}\n".format(NOR[nor],NORI[nori]))
-			# If user types 'exit', go back
 			nor = verb['tenses'][tense]['nor'][nor]
 			nori = verb['tenses'][tense]['nori'][nori]
 			answer = buildNorNori(nor,nori,tense)
 
+		# Handle verbs of type ZER-NORK
+		if verb['type'] == 'zer-nork':
+			# Randomly select the galdegaia
+			zer = randrange(0,2)
+			nork = randrange(0,len(NORK))
+			person = ('singular','plural')
+			selection = input("{} ({})\n".format(NORK[nork],person[zer]))
+			answer = verb['tenses'][tense][person[zer]][nork]
+
+		# Handle verbs of type NORK
+		if verb['type'] == 'nork':
+			# Randomly select the galdegaia
+			nork = randrange(0,len(NORK))
+			selection = input("{}\n".format(NORK[nork]))
+			answer = verb['tenses'][tense]['nork'][nork]
+
+		# If user types 'exit', exit routine
 		if selection.lower() in ('exit','quit','q','x'):
 			return
 		if selection.lower() == answer:
 			score += 1
 			grade = "{} correct!".format(score)
 		else:
-			grade = "*Incorrect: " + answer
+			grade = "* Incorrect: {} (you typed {})".format(answer,selection)
 
 def pickTense(verb):
+	'''	Let's you choose the tense of the verb you want to study.
+		Afterwards runs runTest().
+	'''
 	# Now we select the verb tense we want to study
 	counter = 0
 	string = "{}:\nWhat tense would you like to work on?".format(verb['name'])
 	tenseList = []
 	for tense in sorted(verb['tenses'].keys(),reverse = True):
 		counter += 1
-		string += "\n"+str(counter)+". "+str(tense.capitalize())
+		string += "\n  "+str(counter)+". "+str(tense.capitalize())
 		tenseList.append(tense)
 	selection = numMenu(string,len(verb['tenses']))
 	if selection:
@@ -132,12 +133,19 @@ def pickTense(verb):
 		return
 
 def pickVerb(verbList):
+	'''	Takes the list of verbs read from [verbs.lst] and prints a menu.
+		It sends whichever selection you made to pickTense().
+	'''
 	while True:
 		counter = 0
 		string = "Please pick a verb:"
+		verbtype = ""
 		for verb in verbList:
 			counter += 1
-			string += "\n"+str(counter)+". "+verb['name'].capitalize()
+			if verbtype != verb['type']:
+				verbtype = verb['type']
+				string += "\n"+verbtype.upper()+":"
+			string += "\n  "+str(counter)+". "+verb['name'].title()
 		selection = numMenu(string,len(verbs))
 		if selection:
 			pickTense(verbList[selection-1])
@@ -148,17 +156,19 @@ def pickVerb(verbList):
 if __name__ == '__main__':
 	# Make a list of dictionary values, each entry is a separate verb read from verbs.lst
 	verbs = []
-
 	with open('verbs.lst', encoding='utf-8') as file:
 		for line in file:
+			line = line.strip('\n')
 			tabs = line.count("\t")
-			if tabs == 0:
-				verbname,verbtype = line.strip().split(': ')
-				verbs.append({})
-				# Set verb name and verb type
-				verbs[-1]['name'] = verbname
-				verbs[-1]['type'] = verbtype
-				verbs[-1]['tenses'] = {}
+			if tabs == 0 and line.strip() != '':	# Skip blank/empty lines
+				if ':' in line:
+					verbtype = line[:-1]
+				else:
+					verbs.append({})
+					# Set verb name and verb type
+					verbs[-1]['name'] = line
+					verbs[-1]['type'] = verbtype
+					verbs[-1]['tenses'] = {}
 			if tabs == 1:
 				verbtense = line.strip()
 				verbs[-1]['tenses'][verbtense] = {}
