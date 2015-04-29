@@ -90,28 +90,26 @@ def runTest(verb,tense):
 		# Handle verbs of type NOR
 		if verb['type'] == 'nor':
 			# Randomly select the galdegaia
-			nor = randrange(0,len(NOR)-1)
+			nor = randrange(0,len(NOR))
 			selection = input("{}\n".format(NOR[nor]))
 			# If user types 'exit', go back
-			if selection.lower() == 'exit':
-				return
 			answer = verb['tenses'][tense]['nor'][nor]
 	
 		# Handle verbs of type NOR-NORI
 		if verb['type'] == 'nor-nori':
 			# Randomly select the galdegaiak
-			nor = randrange(0,len(NOR)-1)
-			nori = randrange(0,len(NORI)-1)
+			nor = randrange(0,len(NOR))
+			nori = randrange(0,len(NORI))
 			while NORI[nori] in IMPOSSIBLE[nor][1]:
-				nori = randrange(0,len(NORI)-1)
+				nori = randrange(0,len(NORI))
 			selection = input("{} + {}\n".format(NOR[nor],NORI[nori]))
 			# If user types 'exit', go back
-			if selection.lower() == 'exit':
-				return
 			nor = verb['tenses'][tense]['nor'][nor]
 			nori = verb['tenses'][tense]['nori'][nori]
 			answer = buildNorNori(nor,nori,tense)
 
+		if selection.lower() in ('exit','quit','q','x'):
+			return
 		if selection.lower() == answer:
 			score += 1
 			grade = "{} correct!".format(score)
