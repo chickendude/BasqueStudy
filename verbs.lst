@@ -6,7 +6,16 @@ nor-nori auxiliary
 	past
 		nor: nintzai+n, hintzai+n, zitzai+n, gintzaizki+n, zintzaizki+n, zintzaizki+ten, zitzaizki+n
 		nori: da, a, o, gu, zu, zue, e
-
+nor-nori-nork:
+nor-nori-nork auxiliary
+	present
+		nor: di, dizki
+		nori: t/da, k/a, o, gu, zu, zue, e
+		nork: t, k, -, gu, zu, zue, te
+	past
+		nor: i, izki
+		nori: da, a, o, gu, zu, zue, e
+		nork: n+n, h+n, z+n, gen+n, zen+n, zen+ten, z+ten
 nor:
 joan
 	present
@@ -17,7 +26,7 @@ etorri
 	present
 		nor: nator, hator, dator, gatoz, zatoz, zatozte, datoz
 	past
-		nor: nentorren, hentorren, zetorren, gentozen, zentozen, zentozten, zetozten
+		nor: nentorren, hentorren, zetorren, gentozen, zentozen, zentozten, zetozen
 ibili
 	present
 		nor: nabil, habil, dabil, gabiltza, zabiltza, zabiltzate, dabiltza

@@ -71,6 +71,24 @@ def buildNorNori(nor,nori,tense):
 	string = stem + suffix + stem2
 	return string.lower()
 
+def buildNorNoriNork(nor,nori,nork,tense):
+	''' Returns the conjugated form of a verb based on it's inputs
+	'''
+	if tense == 'present':
+		if nork == '-':
+			nork = ''
+		if '/' in nori:
+			nori = nori.split('/')
+			if nork:
+				nori = nori[1]
+			else:
+				nori = nori[0]
+		string = nor+nori+nork
+	else:
+		nork1,nork2 = nork.split('+')
+		string = nork1+nor+nori+nork2
+	return string.lower()
+
 def multi_runTest(verbList,tense):
 	score = 0
 	grade = test = ""
@@ -99,6 +117,21 @@ def multi_runTest(verbList,tense):
 			nor = verbList[verb]['tenses'][tense]['nor'][nor]
 			nori = verbList[verb]['tenses'][tense]['nori'][nori]
 			answer = buildNorNori(nor,nori,tense)
+
+		# Handle verbs of type NOR-NORI-NORK
+		if verbList[verb]['type'] == 'nor-nori-nork':
+			# Randomly select the galdegaiak
+			nor = randrange(0,2)
+			nori = randrange(0,len(NORI))
+			nork = randrange(0,len(NORK))
+			while NORI[nori] in IMPOSSIBLE[nork][1]:		# Repeat until we get a valid option
+				nori = randrange(0,len(NORI))
+			test = "{} + {} ({})".format(NORK[nor],NORI[nori],('singular','plural')[nor])
+			selection = input(test+"\n")
+			nor = verbList[verb]['tenses'][tense]['nor'][nor]
+			nori = verbList[verb]['tenses'][tense]['nori'][nori]
+			nork = verbList[verb]['tenses'][tense]['nork'][nork]
+			answer = buildNorNoriNork(nor,nori,nork,tense)
 
 		# Handle verbs of type ZER-NORK
 		if verbList[verb]['type'] == 'zer-nork':
@@ -156,6 +189,25 @@ def runTest(verb,tense):
 			nor = verb['tenses'][tense]['nor'][nor]
 			nori = verb['tenses'][tense]['nori'][nori]
 			answer = buildNorNori(nor,nori,tense)
+
+
+		# Handle verbs of type NOR-NORI-NORK
+		if verb['type'] == 'nor-nori-nork':
+			# Randomly select the galdegaiak
+			nor = randrange(0,2)
+			nori = randrange(0,len(NORI))
+			nork = randrange(0,len(NORK))
+			while NORI[nori] in IMPOSSIBLE[nork][1]:		# Repeat until we get a valid option
+				nori = randrange(0,len(NORI))
+			test = "{} + {} ({})".format(NORK[nork],NORI[nori],('singular','plural')[nor])
+			selection = input(test+"\n")
+			nor = verb['tenses'][tense]['nor'][nor]
+			nori = verb['tenses'][tense]['nori'][nori]
+			nork = verb['tenses'][tense]['nork'][nork]
+			answer = buildNorNoriNork(nor,nori,nork,tense)
+
+
+
 
 		# Handle verbs of type ZER-NORK
 		if verb['type'] == 'zer-nork':
